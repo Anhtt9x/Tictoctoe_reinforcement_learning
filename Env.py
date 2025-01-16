@@ -28,5 +28,18 @@ class TicTacToe:
     def is_terminal(self,curr_state):
         if self.is_winning(curr_state):
             return True,"Win"
-        elif :
+        elif len(self.allowed_positions(curr_state))==0:
+            return True, "Tie"
+        else:
+            return False,"Continue"
+
+
+    def allowed_positions(self,curr_state):
+        return [i for i, val in enumerate(curr_state) if np.isnan(val)]
+    
+    
+    def allowed_values(self,curr_state):
+        used_value = [val for val in curr_state if not np.isnan(val)]
+        agent_values = [val for val in self.all_possible_number if val not in used_value and val%2 !=0]
+        
 
