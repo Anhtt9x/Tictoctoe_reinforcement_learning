@@ -41,5 +41,52 @@ class TicTacToe:
     def allowed_values(self,curr_state):
         used_value = [val for val in curr_state if not np.isnan(val)]
         agent_values = [val for val in self.all_possible_number if val not in used_value and val%2 !=0]
-        
+        env_values = [val for val in self.all_possible_number if val not in used_value and val%2 ==0]
+        return agent_values,env_values
+    
+    def action_space(self, curr_state):
+        agent_actions = product(self.allowed_positions(curr_state), self.allowed_values(curr_state[0]))
+        env_actions = product(self.allowed_positions(curr_state), self.allowed_values(curr_state[1]))
 
+        return (agent_actions,env_actions)
+    
+    def state_transition(self, current_state, current_action):
+        resultant_state = current_state
+        resultant_state[current_action[0]] = current_action[1]
+        return resultant_state
+    
+    def reward(self, status):
+        if status == "Win":
+            return 10
+        elif status == "Tie":
+            return 0
+        elif status == "Continue":
+            return -1
+        else:
+            return -10
+        
+    def step(self,curr_state,curr_action):
+        agent_actions, env_actions = self.action_space(curr_state) 
+        assert len([action for action in agent_actions if action == curr_action]) >= 1, "Invalid Action"
+
+        resultant_state = [state for state in curr_state]
+        res_resultant_state = self.state_transition(curr_state,curr_action)
+        is_terminated, status = self.is_terminal(resultant_state)
+
+        reward = self.reward(status)
+        if is_terminated == False:
+            agent_actions, env_actions = self.action_space(resultant_state)
+            env_actions = random.choice([action for action in env_actions])
+            resultant_state = self.state_transition(resultant_state,env_actions)
+
+            is_terminated, status = self.is_terminal(resultant_state)
+            if (is_terminated ==True) and (status == 'Win'):
+                reward = self.reward('Loss')
+        
+        return (resultant_state, reward, is_terminated)
+
+    
+
+
+        
+    

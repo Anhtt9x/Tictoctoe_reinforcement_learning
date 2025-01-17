@@ -1,3 +1,5 @@
 numpy
 gym
 scikit-learn
+ipykernel
+matplotlib
