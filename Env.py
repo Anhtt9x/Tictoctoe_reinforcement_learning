@@ -39,6 +39,8 @@ class TicTacToe:
     
     
     def allowed_values(self,curr_state):
+        if not isinstance(curr_state, (list, np.ndarray)):
+            curr_state = [curr_state]
         used_value = [val for val in curr_state if not np.isnan(val)]
         agent_values = [val for val in self.all_possible_number if val not in used_value and val%2 !=0]
         env_values = [val for val in self.all_possible_number if val not in used_value and val%2 ==0]
